@@ -3,6 +3,16 @@ def startMenu():
     print("1. Skapa konto")
     print("2. Logga in på konto")
     print("3. Avsluta")
+def accountSelection():
+    while True:
+        startMenu()
+        selection = menuInput("Ange ett val:", minValue=1,maxValue=3)
+        if selection == 1:
+            accountCreation()
+        elif selection == 2:
+            loginMenu(accountnumberlogin=1)
+        elif selection == 3:
+            break
 def loginMenu(accountnumberlogin):
     accountnumberlogin = int(input("Ange ditt kontonummer"))
     if accountnumberlogin not in allaccounts:
@@ -35,7 +45,7 @@ def menuInput(prompt,minValue, maxValue):
              print("Mata in ett tal tack")
              continue
     return selection
-def accountCreation (allaccounts):
+def accountCreation ():
     while True:
         try:
             accountNumber = int(input("Skriv in ett kontonummer: "))
@@ -51,6 +61,7 @@ def accountCreation (allaccounts):
         else:
             print("Kontonummer är upptaget,försök igen")
             continue
+    return accountNumber 
 def accountWithdrawal (accountnumberlogin):
     while True:
         try:
@@ -81,19 +92,26 @@ def accountDeposit (accountnumberlogin):
             print("Du kan bara mata in siffror")
             continue
 allaccounts = {}
+with open("accountinfo.txt", "r") as file:
+    for raden in file:
+        radUtanNewLine = raden.replace("\n", "")
+        if radUtanNewLine not in allaccounts:
+            allaccounts[radUtanNewLine] = 0
+accountSelection()
+
 # with open("accountinfo.txt","r") as filen:
 #     for rad in filen:
-#         allaccounts.append(rad.replace("\n", ""))
-while True:
-    startMenu()
-    selection = menuInput("Ange ett val:", minValue=1,maxValue=3)
-    if selection == 1:
-        accountCreation(allaccounts)
-    elif selection == 2:
-        loginMenu(accountnumberlogin=1)
-    elif selection == 3:
-        break
+#         allaccounts = (rad.replace("\n", ""))
+# while True:
+#     startMenu()
+#     selection = menuInput("Ange ett val:", minValue=1,maxValue=3)
+#     if selection == 1:
+#         accountNumber = accountCreation()
+#     elif selection == 2:
+#         loginMenu(accountnumberlogin=1)
+#     elif selection == 3:
+#         break
 # with open("accountinfo.txt","w") as file:
 #     for raden in file:
-#         file.write( + "\n")
+#         file.write( float(allaccounts) )#( + "\n")
     
