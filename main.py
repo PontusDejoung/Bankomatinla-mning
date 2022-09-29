@@ -1,48 +1,52 @@
-import jsonpickle
-from dataclasses import dataclass
-@dataclass
-class accountInfo:
-    kontonummer: int
-    saldo: int
 def startMenu():
     print("    Meny    ")
     print("1. Skapa konto")
     print("2. Logga in på konto")
     print("3. Avsluta")
-def accountSelection():
+def accountSelection(allaccounts:dict):
     while True:
         startMenu()
-        selection = menuInput("Ange ett val:", minValue=1,maxValue=3)
-        if selection == 1:
-            accountCreation()
-        elif selection == 2:
-            loginMenu()
-        elif selection == 3:
+        firstMenuSelection = menuIntInput("Ange ett val:", minValue=1,maxValue=3)
+        if firstMenuSelection == 1:
+            accountNumber = accountCreation()
+            allaccounts[accountNumber] = accountNumber
+            allaccounts[accountNumber] = allaccounts[accountNumber] = 0
+        elif firstMenuSelection == 2:
+            loginMenu(allaccounts)
+        elif firstMenuSelection == 3:
             break
-def loginMenu():
-    accountNumber = int(input("Ange ditt kontonummer"))
-    if accountNumber not in allaccounts:
-        print("Felaktigt kontonummer")
-    else:
-        while True:
-            print("1.Ta ut pengar")
-            print("2.Sätt in pengar")
-            print("3.Visa saldo")
-            print("4.Logga ut")
-            selection = menuInput("Ange val:", minValue=1,maxValue=4)
-            if selection == 1:
-                accountNumber = accountWithdrawal(accountNumber)
-              
-            elif selection == 2:
-                accountNumber = accountDeposit(accountNumber)
-                
-                #accountDeposit(accountNumber)
-            elif selection == 3:
-                if accountNumber in allaccounts:
-                    print(f"Ditt saldo är {allaccounts[accountNumber]}")
-            elif selection == 4:
-                 break
-def menuInput(prompt,minValue, maxValue):
+def loginMenu(allaccounts:dict):
+    while True:
+        try:
+            logInAccountNumber = int(input("Ange ditt kontonummer"))
+            if logInAccountNumber not in allaccounts:
+                print("Felaktigt kontonummer, försök igen")
+                continue
+            else:
+                while True:
+                    print("1.Ta ut pengar")
+                    print("2.Sätt in pengar")
+                    print("3.Visa saldo")
+                    print("4.Logga ut")
+                    secondMenuSelection = menuIntInput("Ange val:", minValue=1,maxValue=4)
+                    if secondMenuSelection == 1:
+                        withdrawalAmount = accountWithdrawal(allaccounts,logInAccountNumber)
+                        allaccounts[logInAccountNumber] = allaccounts[logInAccountNumber] - withdrawalAmount
+                        print(f"Du har nu tagit ut {withdrawalAmount} Ditt saldo är nu {allaccounts[logInAccountNumber]}")
+                    elif secondMenuSelection == 2:
+                        depositmoney = accountDeposit()
+                        allaccounts[logInAccountNumber] = allaccounts[logInAccountNumber] + depositmoney
+                        print(f"{depositmoney} insatt på ditt konto, ditt saldo är nu {allaccounts[logInAccountNumber]}")
+                    elif secondMenuSelection == 3:
+                        if logInAccountNumber in allaccounts:
+                            print(f"Ditt saldo är {allaccounts[logInAccountNumber]}")
+                    elif secondMenuSelection == 4:
+                        break
+        except ValueError:
+            print("Mata in ett tal tack")
+            continue
+        break
+def menuIntInput(prompt,minValue:int, maxValue:int):
     while True:
         try:
             selection = int(input(prompt))
@@ -58,69 +62,34 @@ def accountCreation ():
     while True:
         try:
             accountNumber = int(input("Skriv in ett kontonummer: "))
-            if accountNumber not in allaccounts: 
-                allaccounts[accountNumber] = accountNumber
-                saldo = allaccounts[accountNumber] = allaccounts[accountNumber] = 0
-                print("Kontot skapas")
-                break
-            else:#elif accountNumber in allaccounts:
+            if accountNumber not in allaccounts:
+                print("Kontot har skapats")
+                return accountNumber
+            else:
                 print("Kontonummer är upptaget,försök igen")
                 continue
         except ValueError:
             print("Kontonummret kan bara innehålla siffror")
             continue
-    return accountNumber
-def accountWithdrawal (accountNumber):
+def accountWithdrawal (allaccounts,accountNumber:int):
     while True:
         try:
             withdrawalAmount = float(input("Hur mycket vill du ta ut?: "))
             if allaccounts[accountNumber] >= withdrawalAmount:
-                allaccounts[accountNumber] = allaccounts[accountNumber] - withdrawalAmount
-                print(f"Du har nu tagit ut {withdrawalAmount} Ditt saldo är nu {allaccounts[accountNumber]}")
-                break
+                return withdrawalAmount
             else:
-                print(f"Ditt saldo är {allaccounts[accountNumber]}, försök ,med en mindre summa")
+                print(f"Ditt saldo är {allaccounts[accountNumber]}, försök med en mindre summa")
                 continue
         except ValueError:
             print("Du kan bara mata in siffror")
             continue
-    return accountNumber
-def accountDeposit (accountNumber):
+def accountDeposit ():
     while True:
         try:
             depositmoney = float(input("Hur mycket vill du sätta in?: "))
-            allaccounts[accountNumber] = allaccounts[accountNumber] + depositmoney
-            print(f"{depositmoney} insatt på ditt konto, ditt saldo är nu {allaccounts[accountNumber]}")
-            break
+            return depositmoney
         except ValueError:
             print("Du kan bara mata in siffror")
             continue
-    return accountNumber
 allaccounts = {}
-# with open("accountinfo.txt", "r") as file:
-#     allaccounts = jsonpickle.decode(file.read())
-# with open("accountinfo.txt", "r") as file:
-#     for raden in file:
-#         accountNumber = raden.replace("\n", "")
-#         if accountNumber not in allaccounts:
-#             accountNumber = int(accountNumber)
-#             allaccounts[accountNumber] = 0
-# print(f"{allaccounts}")
-accountSelection()
-# with open("accountinfo.txt", "r") as file:
-#     file.write(jsonpickle.encode(allaccounts))
-
-# with open("accountinfo.txt","r") as filen:
-#     for rad in filen:
-#         allaccounts = (rad.replace("\n", ""))
-# while True:
-#     startMenu()
-#     selection = menuInput("Ange ett val:", minValue=1,maxValue=3)
-#     if selection == 1:
-#         accountNumber = accountCreation()
-#     elif selection == 2:
-#         loginMenu(accountnumberlogin=1)
-#     elif selection == 3:
-#         break
-
-    
+accountSelection(allaccounts)
