@@ -71,7 +71,7 @@ def accountCreation ():
         except ValueError:
             print("Kontonummret kan bara innehålla siffror")
             continue
-def accountWithdrawal (allaccounts,accountNumber:int):
+def accountWithdrawal (allaccounts:dict,accountNumber:int):
     while True:
         try:
             withdrawalAmount = float(input("Hur mycket vill du ta ut?: "))
