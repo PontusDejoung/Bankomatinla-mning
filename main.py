@@ -3,7 +3,7 @@ def startMenu():
     print("1. Skapa konto")
     print("2. Logga in på konto")
     print("3. Avsluta")
-def accountSelection(allaccounts:dict):
+def accountSelection(allaccounts):
     while True:
         startMenu()
         firstMenuSelection = menuIntInput("Ange ett val:", minValue=1,maxValue=3)
@@ -15,7 +15,7 @@ def accountSelection(allaccounts:dict):
             loginMenu(allaccounts)
         elif firstMenuSelection == 3:
             break
-def loginMenu(allaccounts:dict):
+def loginMenu(allaccounts):
     while True:
         try:
             logInAccountNumber = int(input("Ange ditt kontonummer"))
@@ -71,7 +71,7 @@ def accountCreation ():
         except ValueError:
             print("Kontonummret kan bara innehålla siffror")
             continue
-def accountWithdrawal (allaccounts:dict,accountNumber:int):
+def accountWithdrawal (allaccounts,accountNumber:int):
     while True:
         try:
             withdrawalAmount = float(input("Hur mycket vill du ta ut?: "))
